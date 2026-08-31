@@ -1,0 +1,61 @@
+services:
+  url-shortener:
+    build:
+      context: .
+      network: host
+    image: blink-url-shortener:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Jakarta
+      PORT: 3000
+      PUBLIC_URL: "https://${SHORTENER_HOST:?Set SHORTENER_HOST in .env}"
+      DATABASE_URL: "postgresql://blink:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/blink"
+      DB_POOL_MAX: "${DB_POOL_MAX:-10}"
+      LEGACY_DATA_FILE: /app/legacy-data/links.json
+    volumes:
+      - url_shortener_data:/app/legacy-data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=url-shortener-proxy"
+      - "traefik.http.routers.url-shortener.rule=Host(`${SHORTENER_HOST:?Set SHORTENER_HOST in .env}`)"
+      - "traefik.http.routers.url-shortener.entrypoints=web"
+      - "traefik.http.services.url-shortener.loadbalancer.server.port=3000"
+    networks:
+      - proxy
+      - database
+    deploy:
+      replicas: ${APP_REPLICAS:-2}
+      resources:
+        limits:
+          memory: 256M
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Jakarta
+      POSTGRES_DB: blink
+      POSTGRES_USER: blink
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blink -d blink"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - database
+
+networks:
+  proxy:
+    name: url-shortener-proxy
+  database:
+    internal: true
+
+volumes:
+  url_shortener_data:
+  postgres_data:

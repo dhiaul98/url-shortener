@@ -1,0 +1,7 @@
+.env
+docker-compose.yml
+data/*
+!data/.gitkeep
+node_modules/
+npm-debug.log*
+k8s/secret.yaml

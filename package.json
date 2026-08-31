@@ -1,0 +1,16 @@
+{
+  "name": "blink-url-shortener",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A fast, self-hosted URL shortener",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

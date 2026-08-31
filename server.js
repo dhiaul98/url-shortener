@@ -152,7 +152,7 @@ const server = http.createServer(async (req, res) => {
 async function start() {
   await database.initialize();
   if (LEGACY_DATA_FILE) await database.importLegacyFile(LEGACY_DATA_FILE);
-  server.listen(PORT, "0.0.0.0", () => console.log(`Blink is running on port ${PORT}`));
+  server.listen(PORT, "0.0.0.0", () => console.log(`Linkora is running on port ${PORT}`));
 }
 
 function shutdown() {
@@ -167,6 +167,6 @@ process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
 
 start().catch((error) => {
-  console.error("Could not start Blink:", error);
+  console.error("Could not start Linkora:", error);
   process.exit(1);
 });

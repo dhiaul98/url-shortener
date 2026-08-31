@@ -1,6 +1,6 @@
-# Blink URL Shortener
+# Linkora URL Shortener
 
-Blink is a responsive, self-hosted URL shortener designed to run as multiple stateless application replicas backed by PostgreSQL.
+Linkora is a responsive, self-hosted URL shortener designed to run as multiple stateless application replicas backed by PostgreSQL.
 
 ## Architecture
 
@@ -38,7 +38,7 @@ Useful operations:
 ```sh
 docker compose ps
 docker compose logs -f url-shortener
-docker compose exec postgres psql -U blink -d blink -c 'TABLE link_stats;'
+docker compose exec postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "TABLE link_stats;"'
 curl https://short.example.com/ready
 ```
 
@@ -62,8 +62,8 @@ The `k8s/` directory contains:
 Before deploying, publish the image, update `image:` in `k8s/app.yaml`, and replace `short.example.com` with your hostname:
 
 ```sh
-docker build -t registry.example.com/blink-url-shortener:1.0.0 .
-docker push registry.example.com/blink-url-shortener:1.0.0
+docker build -t registry.example.com/linkora-url-shortener:1.0.0 .
+docker push registry.example.com/linkora-url-shortener:1.0.0
 ```
 
 Create the Kubernetes secret without committing it:
@@ -79,7 +79,7 @@ kubectl apply -k k8s/
 Scale manually:
 
 ```sh
-kubectl -n blink scale deployment/url-shortener --replicas=5
+kubectl -n linkora scale deployment/url-shortener --replicas=5
 ```
 
 The HPA requires Kubernetes Metrics Server. For production, replace the included single-node PostgreSQL StatefulSet with managed or highly available PostgreSQL and change `DATABASE_URL` in the secret. Scaling app pods does not make a single PostgreSQL pod highly available.

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: url-shortener
-  namespace: blink
+  namespace: linkora
 spec:
   replicas: 2
   selector:
@@ -16,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 15
       containers:
         - name: app
-          image: your-registry/blink-url-shortener:1.0.0
+          image: your-registry/linkora-url-shortener:1.0.0
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
@@ -28,7 +28,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: blink-secrets
+                  name: linkora-secrets
                   key: DATABASE_URL
           ports:
             - name: http
@@ -57,7 +57,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: url-shortener
-  namespace: blink
+  namespace: linkora
 spec:
   selector:
     app: url-shortener
@@ -70,7 +70,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: url-shortener
-  namespace: blink
+  namespace: linkora
 spec:
   ingressClassName: traefik
   rules:
@@ -89,7 +89,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: url-shortener
-  namespace: blink
+  namespace: linkora
 spec:
   minAvailable: 1
   selector:

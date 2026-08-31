@@ -107,7 +107,7 @@ async function importLegacyFile(filePath) {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    await client.query("SELECT pg_advisory_xact_lock(hashtext('blink-legacy-json-import'))");
+    await client.query("SELECT pg_advisory_xact_lock(hashtext('linkora-legacy-json-import'))");
     const marker = await client.query("SELECT 1 FROM app_metadata WHERE key = 'legacy_json_imported'");
     if (marker.rowCount) {
       await client.query("COMMIT");

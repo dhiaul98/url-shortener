@@ -3,13 +3,13 @@ services:
     build:
       context: .
       network: host
-    image: blink-url-shortener:latest
+    image: linkora-url-shortener:latest
     restart: unless-stopped
     environment:
       TZ: Asia/Jakarta
       PORT: 3000
       PUBLIC_URL: "https://${SHORTENER_HOST:?Set SHORTENER_HOST in .env}"
-      DATABASE_URL: "postgresql://blink:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/blink"
+      DATABASE_URL: "postgresql://linkora:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/linkora"
       DB_POOL_MAX: "${DB_POOL_MAX:-10}"
       LEGACY_DATA_FILE: /app/legacy-data/links.json
     volumes:
@@ -37,13 +37,13 @@ services:
     restart: unless-stopped
     environment:
       TZ: Asia/Jakarta
-      POSTGRES_DB: blink
-      POSTGRES_USER: blink
+      POSTGRES_DB: linkora
+      POSTGRES_USER: linkora
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U blink -d blink"]
+      test: ["CMD-SHELL", "pg_isready -U linkora -d linkora"]
       interval: 5s
       timeout: 3s
       retries: 10

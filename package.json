@@ -1,5 +1,5 @@
 {
-  "name": "blink-url-shortener",
+  "name": "linkora-url-shortener",
   "version": "1.0.0",
   "private": true,
   "description": "A fast, self-hosted URL shortener",
